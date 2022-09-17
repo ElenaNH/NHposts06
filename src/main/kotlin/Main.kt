@@ -1,14 +1,16 @@
 
 
 fun main(args: Array<String>) {
-    println("Hello World!")
+    println("New posts forever!")
 
-    val views = Views(3)
-    println("views: ${views}")
+    val post01 = Post(ownerId = 20, fromId = 30, postType = "post", text="I like horses")
+    val post02 = Post(ownerId = 30, fromId = 55, postType = "reply", text="Me gustan los caballos")
 
-    val mill = System.currentTimeMillis()
-    println("System.currentTimeMillis()/86400000=${mill/86400000}")
+    WallService.add(post01)
+    val post03 = WallService.add(post02).copy(text="Me gustan mucho los caballos")
+    println(WallService.toString())
 
-    val post01 = Post(10, 20, 30, postType = "post")
-    println(post01)
+    WallService.update(post03)
+    println(WallService.toString())
+
 }

@@ -13,8 +13,8 @@ data class Views(val count: Int = 0) {
 }
 
 data class Post(
-    val id: Int,
-    val owner_id: Int,
+    val id: Int = -1,
+    val ownerId: Int,
     val fromId: Int,
     val date: Int = (System.currentTimeMillis() / 86400000).toInt(),
     val text: String = "",
@@ -24,14 +24,43 @@ data class Post(
     val postType: String = "post",
     val canPin: Boolean = true,
     val isPinned: Boolean = true
-)
+) {
+    override fun toString(): String {
+        val friendsOnlyStr = if (friendsOnly) ", friendsOnly" else ""
+        val canPinStr = if (canPin) ", canPin" else ""
+        val isPinnedStr = if (isPinned) ", isPinned" else ""
+        return """======= POST id=${id} ========
+            |ownerID=${ownerId}, fromId=${fromId}, daysOfEpoch=${date},
+            |postType=${postType}${friendsOnlyStr}${canPinStr}${isPinnedStr}
+            |---
+            |${text}
+            |---
+            |likes=${likes}, views=${views}
+            |---------------------------------
+            |""".trimMargin()
+    }
+}
 
 object WallService {
     private var posts = emptyArray<Post>()
+    private var nextPostId = -0
 
     fun add(post: Post): Post {
-        posts += post
+        posts += post.copy(id = nextPostId++)
         return posts.last()
+    }
+
+    fun update(post: Post): Boolean {
+        var postFound = false
+        for ((index, storedPost) in posts.withIndex()) {
+            if (storedPost.id == post.id) {
+                postFound = true
+                // id так и так одинаковый
+                // скопируем весь новый пост, но при этом владельца и дату создания возьмем из старого
+                posts[index] = post.copy(ownerId = storedPost.ownerId, date = storedPost.date)
+            }
+        }
+        return postFound
     }
 
     // Жалко было удалять код из лекции, так что чуточку его подправила
@@ -42,4 +71,14 @@ object WallService {
             }
         }
     }
+
+    override fun toString(): String {
+        var wallDisplay = ""
+        for (post in posts) {
+            wallDisplay += post.toString()
+        }
+
+        return wallDisplay
+    }
+
 }
