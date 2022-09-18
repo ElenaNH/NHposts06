@@ -1,4 +1,3 @@
-
 data class Likes(
     val count: Int = 0,
     val userLikes: Boolean = false,
@@ -6,11 +5,11 @@ data class Likes(
     val canPublish: Boolean = true
 )
 
-data class Views(val count: Int = 0) {
+data class Views(val count: Int = 0) /*{
     override fun toString(): String {
         return count.toString()
     }
-}
+}*/
 
 data class Post(
     val id: Int = -1,
@@ -24,7 +23,7 @@ data class Post(
     val postType: String = "post",
     val canPin: Boolean = true,
     val isPinned: Boolean = true
-) {
+) /*{
     override fun toString(): String {
         val friendsOnlyStr = if (friendsOnly) ", friendsOnly" else ""
         val canPinStr = if (canPin) ", canPin" else ""
@@ -39,14 +38,19 @@ data class Post(
             |---------------------------------
             |""".trimMargin()
     }
-}
+}*/
 
 object WallService {
     private var posts = emptyArray<Post>()
-    private var nextPostId = -0
+    private var nextPostId = 0
 
     fun add(post: Post): Post {
-        posts += post.copy(id = nextPostId++)
+        // Посты на стене могут иметь один из 5 типов
+        val postTypeNew = when (post.postType) {
+            "post", "copy", "reply", "postpone", "suggest" -> post.postType
+            else -> "post"
+        }
+        posts += post.copy(id = nextPostId++, postType = postTypeNew)
         return posts.last()
     }
 
@@ -57,28 +61,40 @@ object WallService {
                 postFound = true
                 // id так и так одинаковый
                 // скопируем весь новый пост, но при этом владельца и дату создания возьмем из старого
-                posts[index] = post.copy(ownerId = storedPost.ownerId, date = storedPost.date)
+                // считаю нелогичным менять тип поста, так что тоже возьмем его из старого
+                posts[index] = post.copy(
+                    ownerId = storedPost.ownerId,
+                    date = storedPost.date,
+                    postType = storedPost.postType
+                )
             }
         }
         return postFound
     }
 
-    // Жалко было удалять код из лекции, так что чуточку его подправила
-    fun likeById(id: Int) {
-        for ((index, post) in posts.withIndex()) {
-            if (post.id == id) {
-                posts[index] = post.copy(likes = post.likes.copy(post.likes.count + 1))
+    fun clear() {
+        posts = emptyArray()
+    }
+
+    /*
+
+        // Жалко было удалять код из лекции, так что чуточку его подправила
+        fun likeById(id: Int) {
+            for ((index, post) in posts.withIndex()) {
+                if (post.id == id) {
+                    posts[index] = post.copy(likes = post.likes.copy(post.likes.count + 1))
+                }
             }
         }
-    }
 
-    override fun toString(): String {
-        var wallDisplay = ""
-        for (post in posts) {
-            wallDisplay += post.toString()
+        override fun toString(): String {
+            var wallDisplay = ""
+            for (post in posts) {
+                wallDisplay += post.toString()
+            }
+
+            return wallDisplay
         }
-
-        return wallDisplay
-    }
+    */
 
 }

@@ -8,9 +8,12 @@ fun main(args: Array<String>) {
 
     WallService.add(post01)
     val post03 = WallService.add(post02).copy(text="Me gustan mucho los caballos")
-    println(WallService.toString())
+    //println(WallService.toString())
 
     WallService.update(post03)
-    println(WallService.toString())
+    //println(WallService.toString())
 
+    // ПЕЧАТЬ ПОСТОВ ОТКЛЮЧЕНА, чтобы не делать тестов больше, чем указано в задании
+
+    println("Посты добавлены, текст ответного поста изменен")
 }

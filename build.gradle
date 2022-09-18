@@ -1,6 +1,8 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'application'
+    id 'java'
+    id 'jacoco'
 }
 
 group = 'org.example'
@@ -11,12 +13,18 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+//    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    testImplementation 'junit:junit:4.13.2'
 }
 
+/*
+* Вот это сказали удалить, иначе тесты не компилировались.
+* Это автоматическое подключение пятой библиотеки, а нам нужна четвертая!!
 test {
     useJUnitPlatform()
 }
+ */
 
 compileKotlin {
     kotlinOptions.jvmTarget = '1.8'
