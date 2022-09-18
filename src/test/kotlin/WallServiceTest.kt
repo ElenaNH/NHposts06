@@ -10,15 +10,24 @@ class WallServiceTest {
         WallService.clear()
     }
 
-    /*@Test
+    @Test
+    fun clearTesting() {
+        val myPost = Post(ownerId = 1, fromId = 1)
+        val postId = WallService.add(myPost).id
+        val result1 = WallService.update(myPost.copy(id = postId, text = "First updating"))
+        WallService.clear()
+        val result2 = WallService.update(myPost.copy(id = postId, text = "Second updating"))
+
+        assertTrue(result1 && !result2)
+    }
+
+    @Test
     fun addDefault() {
         val myPost = Post(ownerId = 1, fromId = 1)
         val result = WallService.add(myPost)
 
-        // По-моему, тут должно быть id=0 после очистки и одного добавления
-        // Но очистки, как видно, не было, несмотря на @Before
-        assertEquals(myPost.copy(id = 6), result)
-    }*/
+        assertEquals(myPost.copy(id = 0), result)
+    }
 
     @Test
     fun addMyValues() {
@@ -43,7 +52,7 @@ class WallServiceTest {
         assertEquals(myPost.copy(id = 2), result)
     }
 
-    /*@Test
+    @Test
     fun addMyValues_02() {
         val myPost = Post(
             id = 5,
@@ -63,11 +72,76 @@ class WallServiceTest {
         WallService.add(myPost)
         val result = WallService.add(myPost)
 
+        assertEquals(myPost.copy(id = 2, postType = "post"), result)
+    }
 
-        // В моем понимании тут должно быть id=2, если сработал метод clear
-        // Очевидно, что очистка не произошла. Почему?
-        assertEquals(myPost.copy(id = 9, postType = "post"), result)
-    }*/
+    @Test
+    fun addMyValues_03() {
+        val myPost = Post(
+            id = 5,
+            ownerId = 1,
+            fromId = 1,
+            date = 19250,
+            text = "My text is very short!",
+            friendsOnly = false,
+            likes = Likes(7),
+            views = Views(8),
+            postType = "suggest",
+            canPin = true,
+            isPinned = false
+        )
+
+        WallService.add(myPost)
+        WallService.add(myPost)
+        val result = WallService.add(myPost)
+
+        assertEquals(myPost.copy(id = 2), result)
+    }
+
+    @Test
+    fun addMyValues_04() {
+        val myPost = Post(
+            id = 5,
+            ownerId = 1,
+            fromId = 1,
+            //date = 19250,
+            text = "My text is very short!",
+            //friendsOnly = false,
+            //likes = Likes(7),
+            //views = Views(8),
+            postType = "postpone",
+            //canPin = true,
+            //isPinned = false
+        )
+
+        WallService.add(myPost)
+        WallService.add(myPost)
+        val result = WallService.add(myPost)
+
+        assertEquals(myPost.copy(id = 2), result)
+    }
+    @Test
+    fun addMyValues_05() {
+        val myPost = Post(
+            id = 5,
+            ownerId = 1,
+            fromId = 1,
+            //date = 19250,
+            text = "My text is very short!",
+            //friendsOnly = false,
+            //likes = Likes(7),
+            //views = Views(8),
+            postType = "copy",
+            //canPin = true,
+            //isPinned = false
+        )
+
+        WallService.add(myPost)
+        WallService.add(myPost)
+        val result = WallService.add(myPost)
+
+        assertEquals(myPost.copy(id = 2), result)
+    }
 
     @Test
     fun updateExisting() {
