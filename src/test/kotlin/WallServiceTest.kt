@@ -12,7 +12,16 @@ class WallServiceTest {
 
     @Test
     fun clearTesting() {
-        val myPost = Post(ownerId = 1, fromId = 1)
+        val myPost = Post(
+            ownerId = 1,
+            fromId = 1,
+            attachments = emptyArray<Attachment>()
+                .plusElement(PhotoAttachment())
+                .plusElement(VideoAttachment())
+                .plusElement(AudioAttachment())
+                .plusElement(DocAttachment())
+                .plusElement(LinkAttachment())
+        )
         val postId = WallService.add(myPost).id
         val result1 = WallService.update(myPost.copy(id = postId, text = "First updating"))
         WallService.clear()
@@ -120,6 +129,7 @@ class WallServiceTest {
 
         assertEquals(myPost.copy(id = 2), result)
     }
+
     @Test
     fun addMyValues_05() {
         val myPost = Post(
@@ -145,16 +155,18 @@ class WallServiceTest {
 
     @Test
     fun updateExisting() {
-        WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text="Hello people!"))
-        WallService.add(Post(ownerId = 33, fromId = 44, postType = "reply", text="Hello!!!"))
-        val myPost = WallService.add(Post(ownerId = 44, fromId = 44, postType = "post", text="I like cats and dogs"))
+        WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text = "Hello people!"))
+        WallService.add(Post(ownerId = 33, fromId = 44, postType = "reply", text = "Hello!!!"))
+        val myPost = WallService.add(Post(ownerId = 44, fromId = 44, postType = "post", text = "I like cats and dogs"))
 
-        val result = WallService.update(myPost.copy(
-            postType = "QQQ",
-            text="I like funny pets!",
-            views = Views(5),
-            likes = Likes(2,true)
-        ))
+        val result = WallService.update(
+            myPost.copy(
+                postType = "QQQ",
+                text = "I like funny pets!",
+                views = Views(5),
+                likes = Likes(2, true)
+            )
+        )
 
         // проверяем результат (используйте assertTrue или assertFalse)
         assertTrue(result)
@@ -162,18 +174,20 @@ class WallServiceTest {
 
     @Test
     fun updateNotExisting() {
-        WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text="Hello people!"))
-        WallService.add(Post(ownerId = 33, fromId = 44, postType = "reply", text="Hello!!!"))
-        WallService.add(Post(ownerId = 44, fromId = 44, postType = "post", text="I like cats and dogs"))
+        WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text = "Hello people!"))
+        WallService.add(Post(ownerId = 33, fromId = 44, postType = "reply", text = "Hello!!!"))
+        WallService.add(Post(ownerId = 44, fromId = 44, postType = "post", text = "I like cats and dogs"))
 
-        val result = WallService.update(Post(
-            ownerId = 44,
-            fromId = 44,
-            postType = "QQQ",
-            text="I like funny pets!",
-            views = Views(5),
-            likes = Likes(2,true)
-        ))
+        val result = WallService.update(
+            Post(
+                ownerId = 44,
+                fromId = 44,
+                postType = "QQQ",
+                text = "I like funny pets!",
+                views = Views(5),
+                likes = Likes(2, true)
+            )
+        )
 
         // проверяем результат (используйте assertTrue или assertFalse)
         assertFalse(result)

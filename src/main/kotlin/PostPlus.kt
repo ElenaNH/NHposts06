@@ -19,10 +19,11 @@ data class Post(
     val text: String = "",
     val replyOwnerId: Int? = null,
     val replyPostId: Int? = null,
-    val friendsOnly: Boolean = true, /* Наверное, это тоже должно быть Boolean */
+    val friendsOnly: Boolean = true,
     val likes: Likes = Likes(),
     val views: Views = Views(),
     val postType: String = "post",
+    val attachments: Array<Attachment> = emptyArray<Attachment>().plusElement(PhotoAttachment()),
     val canPin: Boolean = true,
     val isPinned: Boolean = true
 ) /*{
