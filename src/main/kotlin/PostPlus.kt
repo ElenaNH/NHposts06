@@ -17,6 +17,8 @@ data class Post(
     val fromId: Int,
     val date: Int = (System.currentTimeMillis() / 86400000).toInt(),
     val text: String = "",
+    val replyOwnerId: Int? = null,
+    val replyPostId: Int? = null,
     val friendsOnly: Boolean = true, /* Наверное, это тоже должно быть Boolean */
     val likes: Likes = Likes(),
     val views: Views = Views(),
