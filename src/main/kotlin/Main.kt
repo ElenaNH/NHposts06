@@ -1,5 +1,3 @@
-
-
 fun main(args: Array<String>) {
     println("New posts forever!")
 
@@ -17,8 +15,9 @@ fun main(args: Array<String>) {
             .plusElement(LinkAttachment())
     )
 
+
     WallService.add(post01)
-    val post03 = WallService.add(post02).copy(text="Me gustan mucho los caballos")
+    val post03 = WallService.add(post02).copy(text = "Me gustan mucho los caballos")
     //println(WallService.toString())
 
     WallService.update(post03)
@@ -27,4 +26,12 @@ fun main(args: Array<String>) {
     // ПЕЧАТЬ ПОСТОВ ОТКЛЮЧЕНА, чтобы не делать тестов больше, чем указано в задании
 
     println("Посты добавлены, текст ответного поста изменен")
+
+    val commentToPost03 = Comment(fromId = 0, text = "I do not think about horses")
+    try {
+        WallService.createComment(post03.id, commentToPost03)
+        println("Комментарий добавлен")
+    } catch (e: PostNotFoundException) {
+        println("Не найден пост с идентификатором ${post03.id}")
+    }
 }
