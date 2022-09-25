@@ -46,6 +46,13 @@ data class Post(
 object WallService {
     private var posts = emptyArray<Post>()
     private var nextPostId = 0
+    private var comments = emptyArray<Comment>()
+    private var nextCommentId = 0
+
+    fun clear() {
+        posts = emptyArray()
+        nextPostId = 0
+    }
 
     fun add(post: Post): Post {
         // Посты на стене могут иметь один из 5 типов
@@ -75,10 +82,22 @@ object WallService {
         return postFound
     }
 
-    fun clear() {
-        posts = emptyArray()
-        nextPostId = 0
+    fun createComment(postId: Int, comment: Comment): Comment {
+        var postFound = false
+        for ((index, storedPost) in posts.withIndex()) {
+            if (storedPost.id == postId) {
+                comments += comment.copy(id = nextCommentId++, postId = postId)
+            }
+        }
+        if (!postFound) {
+            // Исключение!!!
+            throw PostNotFoundException("No post with id $postId")
+        }
+        return comments.last()
     }
+
+
+
 
     /*
 
