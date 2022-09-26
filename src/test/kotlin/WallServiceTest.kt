@@ -193,4 +193,20 @@ class WallServiceTest {
         assertFalse(result)
     }
 
+    @Test(expected = PostNotFoundException::class)
+    fun shouldThrow_01() {
+        WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text = "Hello people!"))
+        val myComment = Comment(fromId = 0, text = "People like speaking")
+        WallService.createComment(-1, myComment)    // Несуществующий id поста
+    }
+
+    @Test
+    fun shouldThrow_02() {
+        val myPost = WallService.add(Post(ownerId = 33, fromId = 33, postType = "post", text = "Hello people!"))
+        val myComment = Comment(fromId = 0, text = "People like speaking")
+        val  result = WallService.createComment(myPost.id, myComment)
+        assertTrue((result?.id ?: -1) >= 0)
+    }
+
+
 }

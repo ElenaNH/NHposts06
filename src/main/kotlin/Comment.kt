@@ -9,9 +9,9 @@
 // Просто эти входные данные некуда было деть, и в то же время нужна какая-то связь коммента с постом
 
 data class Comment(
-    val id: Int = 0,
+    val id: Int = -1,
     val postId: Int? = null,
-    val fromId: Int,
+    val fromId: Int = 0,
     val date: Int = (System.currentTimeMillis() / 86400000).toInt(),
     val text: String = "",
     val replyToUser: Int? = null,
