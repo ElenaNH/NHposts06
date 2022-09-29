@@ -52,6 +52,8 @@ object WallService {
     fun clear() {
         posts = emptyArray()
         nextPostId = 0
+        comments = emptyArray()
+        nextCommentId = 0
     }
 
     fun add(post: Post): Post {
@@ -86,12 +88,12 @@ object WallService {
         var postFound = false
         for ((index, storedPost) in posts.withIndex()) {
             if (storedPost.id == postId) {
-                comments += comment.copy(id = nextCommentId++, postId = postId)
+                comments += comment.copy(id = nextCommentId++, parentId = postId)
                 postFound = true
             }
         }
         if (!postFound) {
-            // Исключение!!!
+             // Исключение!!!
             throw PostNotFoundException("No post with id ${postId}")
         }
         return comments.last()

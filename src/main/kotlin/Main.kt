@@ -34,4 +34,23 @@ fun main(args: Array<String>) {
     } catch (e: PostNotFoundException) {
         println("Не найден пост с идентификатором ${post03.id}")
     }
+
+    val myNote = Note(title = "Первая заметка", text = "Кошки - милые создания")
+    val myNoteId = NoteService.add(myNote)
+    val addedNote = NoteService.getById(myNoteId ?: -1)
+
+    if (addedNote is Note) {
+        println("Добавлена заметка $addedNote")
+        val cid = NoteService.createComment(noteId = addedNote.id, comment = Comment(text="У меня есть кошка"))
+        if (cid is Int) {
+            println("Добавлен комментарий с id = $cid")
+            val comments = NoteService.getComments(addedNote.id)
+            println("Количество комментариев: ${comments.size}")
+            NoteService.deleteComment(cid)
+            println("Теперь количество комментариев: ${NoteService.getComments(addedNote.id).size}")
+        }
+    }
+    println("Список заметок ${NoteService.get()}")
+    NoteService.clear()
+
 }
