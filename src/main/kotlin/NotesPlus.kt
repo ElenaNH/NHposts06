@@ -115,19 +115,11 @@ object NoteService {
             if (note.id == noteId) {
                 val liveComments = getComments(noteId)  // Запомним неудаленные комментарии
                 if (delNotes.add(note)) {
-                    for (comment in listComments) {
-                        if (comment.parentId == noteId) {
-                            deleteComment(comment.id)
-                        }
+                    for (comment in liveComments) {
+                        deleteComment(comment.id)
                     }
                     listNotes.removeAt(ind)
                     isDone = true    // Если попали сюда, то все удалено
-                } else {
-                    delNotes.removeLast()    // Раз не смогли удалить, то в списке удаленных не храним
-                    // Комментарии восстановим
-                    for (comment in liveComments) {
-                        restoreComment(comment.id)
-                    }
                 }
                 break   // дальнейший поиск смысла не имеет
             }
@@ -146,8 +138,6 @@ object NoteService {
                 if (delComments.add(comment)) {
                     listComments.removeAt(ind)
                     isDone = true    // Если попали сюда, то все удалено
-                } else {
-                    delComments.removeLast()    // Раз не смогли его удалить, то в списке удаленных он не нужен
                 }
                 break   // дальнейший поиск смысла не имеет
             }
@@ -167,8 +157,6 @@ object NoteService {
                     if (listComments.add(comment)) {
                         delComments.removeAt(ind)
                         isDone = true    // Если попали сюда, то все удалено
-                    } else {
-                        listComments.removeLast()    // Раз не смогли его удалить, то в списке удаленных он не нужен
                     }
                 } else {
                     // Заметки такой нет совсем, либо она удалена

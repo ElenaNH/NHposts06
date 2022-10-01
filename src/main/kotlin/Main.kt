@@ -1,5 +1,5 @@
 fun main(args: Array<String>) {
-    println("New posts forever!")
+    println("New posts and notes forever!")
 
     val post01 = Post(
         ownerId = 20, fromId = 30, postType = "post", text = "I like horses",
@@ -41,16 +41,28 @@ fun main(args: Array<String>) {
 
     if (addedNote is Note) {
         println("Добавлена заметка $addedNote")
-        val cid = NoteService.createComment(noteId = addedNote.id, comment = Comment(text="У меня есть кошка"))
+        val addedNoteId = addedNote.id
+        val cid = NoteService.createComment(noteId = addedNoteId, comment = Comment(text="У меня есть кошка"))
         if (cid is Int) {
             println("Добавлен комментарий с id = $cid")
-            val comments = NoteService.getComments(addedNote.id)
-            println("Количество комментариев: ${comments.size}")
+//            val comments = NoteService.getComments(addedNoteId)
+            println("Количество комментариев: ${NoteService.getComments(addedNoteId).size}")
+            for (icomment in NoteService.getComments(addedNoteId)) println(icomment)
+            NoteService.editComment(cid, "У меня есть кошка и собака")
+            println("После изменения комментарии такие:")
+            for (icomment in NoteService.getComments(addedNoteId)) println(icomment)
             NoteService.deleteComment(cid)
-            println("Теперь количество комментариев: ${NoteService.getComments(addedNote.id).size}")
+            println("После удаления количество комментариев: ${NoteService.getComments(addedNoteId).size}")
+            NoteService.restoreComment(cid)
+            println("После восстановления количество комментариев: ${NoteService.getComments(addedNoteId).size}")
         }
+        println("Список заметок ${NoteService.get()}")
+        NoteService.edit(noteId = addedNoteId, title = addedNote.title, text = "Кошки - милейшие создания")
+        println("После изменения список заметок ${NoteService.get()}")
+        NoteService.delete(addedNoteId)
+        println("После удаления заметки список заметок ${NoteService.get()}")
     }
-    println("Список заметок ${NoteService.get()}")
+
     NoteService.clear()
 
 }
