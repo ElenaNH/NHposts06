@@ -35,6 +35,9 @@ fun main(args: Array<String>) {
         println("Не найден пост с идентификатором ${post03.id}")
     }
 
+
+    // Заметки и комментарии
+
     val myNote = Note(title = "Первая заметка", text = "Кошки - милые создания")
     val myNoteId = NoteService.add(myNote)
     val addedNote = NoteService.getById(myNoteId ?: -1)

@@ -28,7 +28,6 @@ object NoteService {
         delComments.clear()
     }
 
-    // работа с заметками
     fun add(note: Note): Int? {
         val newNote =
             note.copy(id = nextNoteId++, ownerId = (0..2).random())   // Ну допустим, что мы знаем текущего пользователя
@@ -36,12 +35,15 @@ object NoteService {
         return if (actionResult) newNote.id else null
     }
 
-
-    // работа с комментариями
     fun createComment(noteId: Int, comment: Comment): Int? {
-        val newComment = comment.copy(id = nextCommentId++, parentId = noteId)
-        val actionResult: Boolean = listComments.add(newComment)
-        return if (actionResult) newComment.id else null
+        val note = getById(noteId)  // Мы просто вывалимся, если передан некорректный noteId
+        var newCommentId: Int? = null
+        if (note is Note) {
+            val newComment = comment.copy(id = nextCommentId++, parentId = noteId)
+            val actionResult = listComments.add(newComment)
+            newCommentId = if (actionResult) newComment.id else null
+        }
+        return newCommentId
     }
 
     fun getById(noteId: Int): Note? {
@@ -68,6 +70,8 @@ object NoteService {
 
     fun getComments(noteId: Int): Array<Comment> {
         var comments = emptyArray<Comment>()
+        // Думаю, беды особой не будет, если для несуществующей заметки я верну пустой массив комментариев
+        // Не будем выбрасывать исключение в этом случае (даже не будем проверять наличие заметки)
         for (comment in listComments) {
             if (comment.parentId == noteId) comments += comment.copy()  // вернем копии комментариев, отвязав их от списка
         }
